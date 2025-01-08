@@ -18,7 +18,7 @@ class DiaryData {
   }
 
   
-  // Obtener una cita por cedula de paciente
+  // Obtener una cita por cedula de paciente para verificar
   static async getDiaryByCedula(cedula) {
     const connection = await db.connect();
     try {

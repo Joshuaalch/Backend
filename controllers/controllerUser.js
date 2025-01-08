@@ -58,7 +58,7 @@ class ControllerUser {
   // Obtener un usuario por cedula
   async getUserByCedula(cedula) {
     try {
-      const user = await PatientData.getUserByCedula(cedula); // Método estático
+      const user = await UserData.getUserByCedula(cedula); // Método estático
 
       if (!user) {
         throw new Error(`No se encontró un usuario con la cédula ${cedula}`);

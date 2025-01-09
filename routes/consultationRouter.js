@@ -8,7 +8,7 @@ const consultationRouter = (app) => {
   };
   
   //obtener paciente por cedula/ ruta api
-  app.route("/patient/:cedula")
+  app.route("/consultation/:id_consulta")
   .get(async (req, res) => {
     try {
       const { cedula } = req.params; // Obtiene la cédula de la URL
@@ -84,9 +84,9 @@ const consultationRouter = (app) => {
     // Obtener todos los pacientes
     .get(async (req, res) => {
       try {
-        const controller = new ControllerPatient();
-        const users = await controller.getAllUsers();
-        response.data = users;
+        const controller = new ControllerConsultation();
+        const consultation = await controller.getAllConsultation();
+        response.data = consultation;
         response.code = "200";
       } catch (error) {
         response.data = error.message;

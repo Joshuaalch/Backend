@@ -4,18 +4,21 @@ const db = require("./connectionDB");
 class ConsultationData {
     
   // Obtener todas las consultas
-  static async getAllUsers() {
+  static async getAllConsultation() {
     const connection = await db.connect();
     try {
-      const [rows] = await connection.query("SELECT id_cedula, tipo_cedula, id_empresa, nombre, apellidos, conocido_como,correo, telefono,telefono_emergencia,correo, residencia, observaciones FROM tbpaciente  WHERE estado = 1");
+      const [rows] = await connection.query(
+        "SELECT id_consulta, id_cedula, id_empresa, id_tipoconsulta, valoracion, presion_arterial, frecuencia_cardiaca, saturacion_oxigeno, glicemia, frecuencia_respiratoria, plan_tratamiento, fecha_consulta, monto_consulta, estado FROM tbconsulta WHERE estado = 1"
+      );
       return rows;
     } catch (error) {
-      console.error("Error al obtener paciente:", error.message);
+      console.error("Error al obtener las consultas:", error.message);
       throw error;
     } finally {
       await db.disconnect();
     }
   }
+  
 
   
   // Obtener un paciente por su cédula

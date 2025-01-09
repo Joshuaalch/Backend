@@ -13,11 +13,11 @@ class ControllerConsultation {
     }
   }
 
-  // Obtener todos los usuarios
-  async getAllUsers() {
+  // Obtener todas las consultas
+  async getAllConsultation() {
     try {
-      const users = await PatientData.getAllUsers(); // Método estático, devuelve todos los usuarios (pacientes)
-      return users;
+      const consultation = await ConsultationData.getAllConsultation(); // Método estático, devuelve todos los usuarios (pacientes)
+      return consultation;
     } catch (error) {
       console.error("Error al obtener pacientes:", error.message);
       throw error;

@@ -37,4 +37,7 @@ patientRouter(app);
 const diaryRouter = require('./routes/diaryRouter');
 diaryRouter(app);
 
+const consultationRouter = require('./routes/consultationRouter');
+consultationRouter(app);
+
 

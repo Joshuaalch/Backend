@@ -29,12 +29,12 @@ const consultationRouter = (app) => {
     res.send(response);
   })
 
- //eliminar paciente por cedula
-  app.route("/patient/:cedula")
+ //eliminar consulta por cedula
+  app.route("/consultation/:cedula")
 
   .delete(async (req, res) => {
     try {
-      const controller = new ControllerPatient();
+      const controller = new ControllerConsultation();
       const { cedula } = req.params;
 
       if(!cedula){
@@ -48,7 +48,7 @@ const consultationRouter = (app) => {
         response.data = result.message;
         response.code = "200";
       } else {
-        response.data = "El paciente No fue eliminado";
+        response.data = "La consulta no fue eliminado";
         response.code = "400";
       }
     } catch (error) {
@@ -58,7 +58,7 @@ const consultationRouter = (app) => {
     res.send(response);
   });
 
- //crear las citas
+ //crear las consultas
   app.route("/consultation")
   .post(async (req, res) => {
     const response = {};
@@ -81,7 +81,7 @@ const consultationRouter = (app) => {
   })
 
 
-    // Obtener todos los pacientes
+    // Obtener todos las consultas
     .get(async (req, res) => {
       try {
         const controller = new ControllerConsultation();
@@ -96,16 +96,16 @@ const consultationRouter = (app) => {
       res.send(response);
     })
     
-    // Actualizar paciente
+    // Actualizar consulta
     .patch(async (req, res) => {
       try {
-        const controller = new ControllerPatient();
+        const controller = new ControllerConsultation();
         const result = await controller.updateUserByCedula(req.body);
         if (result.success) {
           response.data = result.message;
           response.code = "200";
         } else {
-          response.data = "El Usuario No fue actualizado";
+          response.data = "La consulta no fue actualizado";
           response.code = "400";
         }
       } catch (error) {

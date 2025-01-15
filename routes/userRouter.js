@@ -1,6 +1,8 @@
 const ControllerUser = require("../controllers/controllerUser");
 const validateBody = require("../middlewares/validateBody");
 
+
+
 const userRouter = (app) => {
   let response = {
     data: "message",

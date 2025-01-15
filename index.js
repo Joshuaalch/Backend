@@ -1,27 +1,25 @@
 const express = require('express');
 const validateBody = require("./middlewares/validateBody");
+const cors = require('cors');
 
-const PORT = 3000;
+const PORT = 3001;
 
+// Crear una sola instancia de express
 const app = express();
+
+// Habilita CORS globalmente para todas las rutas
+app.use(cors());
+
+// Middleware global para manejar JSON y validar el cuerpo de las solicitudes
 app.use(express.json());
+app.use(validateBody); // Asegúrate de que este middleware sea necesario
 
-// Middleware global para validar el cuerpo de las solicitudes
-app.use(validateBody);
-
-
+// Ruta de prueba
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo desde Node.js!');
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-
-//const connectionDB = require('./data/connectionDB');
-//connectionDB.connect();
-
-// routers
+// Definir rutas
 const userRouter = require('./routes/userRouter');
 userRouter(app);
 
@@ -40,4 +38,7 @@ diaryRouter(app);
 const consultationRouter = require('./routes/consultationRouter');
 consultationRouter(app);
 
-
+// Iniciar el servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});

@@ -30,7 +30,7 @@ const consultationRouter = (app) => {
   })
 
  //eliminar paciente por cedula
-  app.route("/patient/:cedula")
+  app.route("/consultation/:id_consulta")
 
   .delete(async (req, res) => {
     try {

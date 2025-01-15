@@ -1,7 +1,11 @@
 const PatientData = require("../data/patientData");
 const UserData = require("../data/userData");
 
+
+
 class ControllerUser {
+
+  
   // Autenticación
   async auth(cedula, contrasena) {
     try {
@@ -100,6 +104,7 @@ class ControllerUser {
       throw error;
     }
   }
+
 }
 
 module.exports = ControllerUser;

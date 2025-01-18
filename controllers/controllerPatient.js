@@ -2,7 +2,7 @@ const PatientData = require("../data/patientData");
 
 class ControllerPatient {
 
-  // Crear usuario
+  // Metodo para crear usuario
   async createUser(data) {
     try {
       const result = await PatientData.createUser(data); // Método estático

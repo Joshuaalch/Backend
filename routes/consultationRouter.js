@@ -7,7 +7,7 @@ const consultationRouter = (app) => {
     code: "code",
   };
   
-  //obtener paciente por cedula/ ruta api
+  //Obtener paciente por cedula/ ruta api
   app.route("/consultation/:id_consulta")
   .get(async (req, res) => {
     try {
@@ -29,7 +29,7 @@ const consultationRouter = (app) => {
     res.send(response);
   })
 
- //eliminar consulta por cedula
+ //Eliminar consulta por cedula
   app.route("/consultation/:cedula")
 
   .delete(async (req, res) => {
@@ -58,7 +58,7 @@ const consultationRouter = (app) => {
     res.send(response);
   });
 
- //crear las consultas
+ //Crear las consultas
   app.route("/consultation")
   .post(async (req, res) => {
     const response = {};
@@ -81,7 +81,7 @@ const consultationRouter = (app) => {
   })
 
 
-    // Obtener todos las consultas
+    // Obtener todas las consultas
     .get(async (req, res) => {
       try {
         const controller = new ControllerConsultation();

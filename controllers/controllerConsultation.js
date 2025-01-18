@@ -2,7 +2,7 @@ const ConsultationData = require("../data/consultationData");
 
 class ControllerConsultation {
 
-  // Crear consluta
+  // Metodo para crear las consultas
   async createConsultation(data) {
     try {
       const result = await ConsultationData.createConsultation(data); // Método estático
@@ -13,7 +13,7 @@ class ControllerConsultation {
     }
   }
 
-  // Obtener todas las consultas
+  // Metodo para obtener todas las consultas
   async getAllConsultation() {
     try {
       const consultation = await ConsultationData.getAllConsultation(); // Método estático, devuelve todos los usuarios (pacientes)
@@ -24,7 +24,7 @@ class ControllerConsultation {
     }
   }
 
-  // Obtener una consulta por cedula
+  // Metodo para obtener una consulta por cedula
   async getUserByCedula(cedula) {
     try {
       const consultation = await ConsultationDataData.getUserByCedula(cedula); // Método estático
@@ -40,7 +40,7 @@ class ControllerConsultation {
     }
   }
 
-  // Eliminar consulta por cédula
+  // Metodo para eliminar consulta por cédula
   async deleteUserByCedula(cedula) {
     try {
       const result = await ConsultationDataData.deleteUser(cedula); // Método estático
@@ -54,7 +54,7 @@ class ControllerConsultation {
     }
   }
 
-  // Actualizar consulta por cédula
+  // Metodo para actualizar consulta por cédula
   async updateUserByCedula(data) {
     try {
       const result = await PatientData.updateUser(data); // Método estático

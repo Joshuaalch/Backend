@@ -3,7 +3,7 @@ const db = require("./connectionDB");
 
 class ConsultationData {
     
-  // Obtener todas las consultas
+  // Se obtienen todas las consultas
   static async getAllConsultation() {
     const connection = await db.connect();
     try {
@@ -21,7 +21,7 @@ class ConsultationData {
   
 
   
-  // Obtener un paciente por su cédula
+  // Se obtiene un paciente por su cédula
   static async getUserByCedula(cedula) {
     const connection = await db.connect();
     try {

@@ -3,7 +3,7 @@ const db = require("./connectionDB");
 
 class PatientData {
     
-  // Obtener todos los pacientes
+  // Metodo para obtener todos los pacientes
   static async getAllUsers() {
     const connection = await db.connect();
     try {

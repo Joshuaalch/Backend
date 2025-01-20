@@ -2,7 +2,7 @@ const PatientData = require("../data/patientData");
 
 class ControllerPatient {
 
-  // Metodo para crear usuario
+  // Crear usuario
   async createUser(data) {
     try {
       const result = await PatientData.createUser(data); // Método estático
@@ -30,7 +30,7 @@ class ControllerPatient {
       const user = await PatientData.getUserByCedula(cedula); // Método estático
 
       if (!user) {
-        throw new Error(No se encontró paciente con la cédula ${cedula});
+        throw new Error(`No se encontró paciente con la cédula ${cedula}`);
       }
     
       return user;
@@ -45,7 +45,7 @@ class ControllerPatient {
     try {
       const result = await PatientData.deleteUser(cedula); // Método estático
       if (!result) {
-        throw new Error(No se encontró paciente con la cédula ${cedula});
+        throw new Error(`No se encontró paciente con la cédula ${cedula}`);
       }
       return { success: true, message: "Usuario eliminado con éxito" };
     } catch (error) {
@@ -59,7 +59,7 @@ class ControllerPatient {
     try {
       const result = await PatientData.updateUser(data); // Método estático
       if (!result) {
-        throw new Error(No se encontró un usuario con la cédula ${data.id_cedula});
+        throw new Error(`No se encontró un usuario con la cédula ${data.id_cedula}`);
       }
       return { success: true, message: "Usuario actualizado con éxito" };
     } catch (error) {

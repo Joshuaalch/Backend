@@ -3,7 +3,7 @@ const db = require("./connectionDB");
 
 class PatientData {
     
-  // Metodo para obtener todos los pacientes
+  // Obtener todos los pacientes
   static async getAllUsers() {
     const connection = await db.connect();
     try {
@@ -135,10 +135,10 @@ class PatientData {
     const connection = await db.connect();
     try {
       const [result] = await connection.query(
-        //DELETE FROM tbusuario WHERE id_cedula = ?,
-        `UPDATE tbpaciente SET estado = ? WHERE id_cedula = ?`, // Usar comillas invertidas
-      [0, cedula] // Parámetros acá
-    );
+        //`DELETE FROM tbusuario WHERE id_cedula = ?`,
+        `UPDATE tbpaciente SET estado = ? WHERE id_cedula = ?`,
+        [0, cedula]
+      );
       return result.affectedRows > 0; // Devuelve true si se eliminó correctamente
     } catch (error) {
       console.error("Error al eliminar el paciente:", error.message);

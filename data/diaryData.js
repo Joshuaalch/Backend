@@ -6,8 +6,25 @@ class DiaryData {
   // Obtener todas las citas
   static async getAllDiary() {
     const connection = await db.connect();
-    try {
-      const [rows] = await connection.query("SELECT id_cedula_usuario,id_cedula_paciente,fecha, hora_inicio, hora_final FROM tbcita ");
+   
+      try {
+        const [rows] = await connection.query(
+          `SELECT 
+               tbcita.id_cita as numero_cita,
+              tbcita.id_cedula_usuario,
+              tbusuario.nombre AS nombre_usuario,
+              tbcita.id_cedula_paciente,
+              tbpaciente.nombre AS nombre_paciente,
+              tbcita.fecha,
+              tbcita.hora_inicio,
+              tbcita.hora_final
+          FROM 
+              tbcita
+          INNER JOIN 
+              tbusuario ON tbcita.id_cedula_usuario = tbusuario.id_cedula
+          INNER JOIN 
+              tbpaciente ON tbcita.id_cedula_paciente = tbpaciente.id_cedula`
+      );
       return rows;
     } catch (error) {
       console.error("Error al obtener citas:", error.message);
@@ -22,59 +39,65 @@ class DiaryData {
   static async getDiaryByCedula(cedula) {
     const connection = await db.connect();
     try {
-      const [rows] = await connection.query(
-        "SELECT  id_cedula_usuario,id_cedula_paciente,fecha, hora_inicio, hora_final FROM tbcita WHERE id_cedula_paciente = ? ",
-        [cedula]
-      );
-      return rows[0] || null; // Devuelve el usuario o null si no existe
+        const [rows] = await connection.query(
+            `SELECT 
+                tbcita.id_cita as numero_cita,
+                tbcita.id_cedula_usuario,
+                tbusuario.nombre AS encargado,
+                tbcita.id_cedula_paciente,
+                tbpaciente.nombre AS paciente,
+                tbcita.fecha,
+                tbcita.hora_inicio,
+                tbcita.hora_final
+            FROM 
+                tbcita
+            INNER JOIN 
+                tbusuario ON tbcita.id_cedula_usuario = tbusuario.id_cedula
+            INNER JOIN 
+                tbpaciente ON tbcita.id_cedula_paciente = tbpaciente.id_cedula
+            WHERE 
+                tbcita.id_cedula_paciente = ?`,
+            [cedula]
+        );
+        return rows[0] || null; // Devuelve el registro o null si no existe
     } catch (error) {
-      console.error("Error al obtener cita de dicho paciente:", error.message);
-      throw error;
+        console.error("Error al obtener cita de dicho paciente:", error.message);
+        throw error;
     } finally {
-      await db.disconnect();
+        await db.disconnect();
     }
-  }
+}
 
-  // Crear un nuevo paciente
-  static async createUser(data) {
+
+  // Crear un nueva cita
+  static async createDiary(data) {
     const connection = await db.connect();
     try {
 
       const {
-        id_cedula,
-        tipo_cedula,
         id_empresa,
-        nombre,
-        apellidos,
-        conocido_como,
-        telefono,
-        telefono_emergencia,
-        correo,
-        residencia,
-        observaciones
+        id_cedula_usuario,
+        id_cedula_paciente,
+        fecha,
+        hora_inicio,
+        hora_final
       } = data;
 
       const [result] = await connection.query(
-        `INSERT INTO tbpaciente (id_cedula, tipo_cedula, id_empresa, nombre, apellidos,conocido_como, telefono, telefono_emergencia,correo,residencia,observaciones, estado)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`,
+        `INSERT INTO tbcita (id_empresa, id_cedula_usuario,id_cedula_paciente, fecha, hora_inicio,hora_final)
+                 VALUES ( ?, ?, ?, ?, ?, ?)`,
         [
-          id_cedula,
-          tipo_cedula,
-          id_empresa,
-          nombre,
-          apellidos,
-          conocido_como,
-          telefono,
-          telefono_emergencia,
-          correo,
-          residencia,
-          observaciones,
-          1,
+        id_empresa,
+        id_cedula_usuario,
+        id_cedula_paciente,
+        fecha,
+        hora_inicio,
+        hora_final
         ]
       );
-      return result.insertId; // Devuelve el ID del nuevo paciente
+      return result.insertId; // Devuelve el ID del nuevo
     } catch (error) {
-      console.error("Error al crear el usuario:", error.message);
+      console.error("Error al crear la cita:", error.message);
       throw error;
     } finally {
       await db.disconnect();
@@ -82,73 +105,63 @@ class DiaryData {
   }
 
   // Actualizar un usuario
-  static async updateUser(data) {
+  static async updateDiary(data) {
     const connection = await db.connect();
     try {
       const {
-        id_cedula,
-        tipo_cedula,
-        nombre,
-        apellidos,
-        conocido_como,
-        telefono,
-        telefono_emergencia,
-        correo,
-        residencia,
-        observaciones
+        id_cita,
+        id_cedula_usuario,
+        fecha,
+        hora_inicio,
+        hora_final
       } = data;
   
       // Validación de datos requeridos
-      if (!id_cedula || !tipo_cedula || !nombre || !apellidos) {
-        throw new Error("Faltan datos obligatorios para actualizar el usuario");
+      if (!id_cita || !id_cedula_usuario || !fecha || !hora_inicio || !hora_final) {
+        throw new Error("Faltan datos obligatorios para actualizar la cita");
       }
   
       const [result] = await connection.query(
-        `UPDATE tbpaciente
-         SET tipo_cedula = ?, nombre = ?, apellidos = ?, conocido_como = ?, telefono = ?, telefono_emergencia = ?, correo = ?, residencia = ?, observaciones = ?
-         WHERE id_cedula = ?`,
-        [
-          tipo_cedula,
-          nombre,
-          apellidos,
-          conocido_como,
-          telefono,
-          telefono_emergencia,
-          correo,
-          residencia,
-          observaciones,
-          id_cedula
+        `UPDATE tbcita
+         SET  id_cedula_usuario = ?, fecha = ?, hora_inicio = ?, hora_final = ?
+         WHERE  id_cita =?`,
+        [ 
+          id_cedula_usuario,
+          fecha,
+          hora_inicio,
+          hora_final,
+          id_cita,
         ]
       );
   
       return result.affectedRows > 0; // Devuelve true si se actualizó correctamente
     } catch (error) {
-      console.error("Error al actualizar el usuario:", error.message);
+      console.error("Error al actualizar la cita:", error.message);
       throw error;
     } finally {
       await db.disconnect();
     }
   }
 
-  // Eliminar un paciente
-  static async deleteUser(cedula) {
+  // Eliminar una cita
+  static async deleteDiary(id_cita) {
     const connection = await db.connect();
     try {
       const [result] = await connection.query(
-        //`DELETE FROM tbusuario WHERE id_cedula = ?`,
-        `UPDATE tbpaciente SET estado = ? WHERE id_cedula = ?`,
-        [0, cedula]
+        `DELETE FROM tbcita WHERE id_cita = ?`,
+        [id_cita] // Pasa el valor correcto como parámetro
       );
+  
       return result.affectedRows > 0; // Devuelve true si se eliminó correctamente
     } catch (error) {
-      console.error("Error al eliminar el paciente:", error.message);
+      console.error("Error al eliminar la cita:", error.message);
       throw error;
     } finally {
-      await db.disconnect();
+      await db.disconnect(); // Cierra la conexión adecuadamente
     }
   }
-
   
+
 
 }
 

@@ -7,7 +7,7 @@ const consultationRouter = (app) => {
     code: "code",
   };
   
-  //Obtener paciente por cedula/ ruta api
+  //obtener paciente por cedula/ ruta api
   app.route("/consultation/:id_consulta")
   .get(async (req, res) => {
     try {
@@ -29,12 +29,12 @@ const consultationRouter = (app) => {
     res.send(response);
   })
 
- //Eliminar consulta por cedula
-  app.route("/consultation/:cedula")
+ //eliminar paciente por cedula
+  app.route("/consultation/:id_consulta")
 
   .delete(async (req, res) => {
     try {
-      const controller = new ControllerConsultation();
+      const controller = new ControllerPatient();
       const { cedula } = req.params;
 
       if(!cedula){
@@ -48,7 +48,7 @@ const consultationRouter = (app) => {
         response.data = result.message;
         response.code = "200";
       } else {
-        response.data = "La consulta no fue eliminado";
+        response.data = "El paciente No fue eliminado";
         response.code = "400";
       }
     } catch (error) {
@@ -58,7 +58,7 @@ const consultationRouter = (app) => {
     res.send(response);
   });
 
- //Crear las consultas
+ //crear las citas
   app.route("/consultation")
   .post(async (req, res) => {
     const response = {};
@@ -81,7 +81,7 @@ const consultationRouter = (app) => {
   })
 
 
-    // Obtener todas las consultas
+    // Obtener todos los pacientes
     .get(async (req, res) => {
       try {
         const controller = new ControllerConsultation();
@@ -96,16 +96,16 @@ const consultationRouter = (app) => {
       res.send(response);
     })
     
-    // Actualizar consulta
+    // Actualizar paciente
     .patch(async (req, res) => {
       try {
-        const controller = new ControllerConsultation();
+        const controller = new ControllerPatient();
         const result = await controller.updateUserByCedula(req.body);
         if (result.success) {
           response.data = result.message;
           response.code = "200";
         } else {
-          response.data = "La consulta no fue actualizado";
+          response.data = "El Usuario No fue actualizado";
           response.code = "400";
         }
       } catch (error) {

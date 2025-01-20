@@ -2,10 +2,10 @@ const DiaryData = require("../data/diaryData");
 
 class ControllerDiary {
 
-  // Crear usuario
+  // Crear o agendar cita
   async createDiary(data) {
     try {
-      const result = await PatientData.createUser(data); // Método estático
+      const result = await DiaryData.createDiary(data); // Método estático
       return { success: true, id: result };
     } catch (error) {
       console.error("Error al crear paciente:", error.message);
@@ -13,7 +13,7 @@ class ControllerDiary {
     }
   }
 
-  // Obtener todos los usuarios
+  // Obtener todas las citas
   async getAllDiary() {
     try {
       const diarys = await DiaryData.getAllDiary(); // Método estático, devuelve todas citas 
@@ -24,10 +24,10 @@ class ControllerDiary {
     }
   }
 
-  // Obtener un usuario por cedula
+  // Obtener una cita
   async getDiaryByCedula(cedula) {
     try {
-      const user = await DiaryDataData.getDiaryByCedula(cedula); // Método estático
+      const user = await DiaryData.getDiaryByCedula(cedula); // Método estático
 
       if (!user) {
         throw new Error(`No se encontró cita programada para el paciente con la cédula ${cedula}`);
@@ -41,29 +41,29 @@ class ControllerDiary {
   }
 
   // Eliminar usuario por cédula
-  async deleteUserByCedula(cedula) {
+  async deleteDiaryByID_cita(id_cita) {
     try {
-      const result = await PatientData.deleteUser(cedula); // Método estático
+      const result = await DiaryData.deleteDiary(id_cita); // Método estático
       if (!result) {
-        throw new Error(`No se encontró paciente con la cédula ${cedula}`);
+        throw new Error(`No se encontró cita  ${id_cita}`);
       }
-      return { success: true, message: "Usuario eliminado con éxito" };
+      return { success: true, message: "Cita elimanda con éxito" };
     } catch (error) {
-      console.error("Error al eliminar usuario:", error.message);
+      console.error("Error al eliminar cita:", error.message);
       throw error;
     }
   }
 
-  // Actualizar usuario por cédula
-  async updateUserByCedula(data) {
+  // Actualizar cita por id_cita
+  async updateDiaryByID_cita(data) {
     try {
-      const result = await PatientData.updateUser(data); // Método estático
+      const result = await DiaryData.updateDiary(data); // Método estático
       if (!result) {
         throw new Error(`No se encontró un usuario con la cédula ${data.id_cedula}`);
       }
-      return { success: true, message: "Usuario actualizado con éxito" };
+      return { success: true, message: "Cita actualizada con éxito" };
     } catch (error) {
-      console.error("Error al actualizar usuario:", error.message);
+      console.error("Error al actualizar cita:", error.message);
       throw error;
     }
   }

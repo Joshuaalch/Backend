@@ -2,7 +2,9 @@ const express = require('express');
 const validateBody = require("./middlewares/validateBody");
 const cors = require('cors');
 
-const PORT = 3001;
+
+
+const PORT = 3000;
 
 // Crear una sola instancia de express
 const app = express();
@@ -12,7 +14,7 @@ app.use(cors());
 
 // Middleware global para manejar JSON y validar el cuerpo de las solicitudes
 app.use(express.json());
-app.use(validateBody); // Asegúrate de que este middleware sea necesario
+//app.use(validateBody); // Asegúrate de que este middleware sea necesario
 
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -38,7 +40,14 @@ diaryRouter(app);
 const consultationRouter = require('./routes/consultationRouter');
 consultationRouter(app);
 
+const mhRouter = require('./routes/medicalHistoryRouter');
+mhRouter(app);
+
+const fileRouter = require('./routes/fileRouter');
+fileRouter(app);
+
+
 // Iniciar el servidor
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+app.listen(3001, () => {
+    console.log('Server is running on http://localhost:3001');
+  });

@@ -8,7 +8,7 @@ class ConsultationData {
     const connection = await db.connect();
     try {
       const [rows] = await connection.query(
-        "SELECT id_consulta, id_cedula, id_empresa, id_tipoconsulta, valoracion, presion_arterial, frecuencia_cardiaca, saturacion_oxigeno, glicemia, frecuencia_respiratoria, plan_tratamiento, fecha_consulta, monto_consulta, estado FROM tbconsulta WHERE estado = 1"
+        "SELECT id_consulta, id_cedula, id_empresa, tipoconsulta, valoracion, presion_arterial, frecuencia_cardiaca, saturacion_oxigeno, glicemia, frecuencia_respiratoria, plan_tratamiento, fecha_consulta, monto_consulta, estado FROM tbconsulta WHERE estado = 1"
       );
       return rows;
     } catch (error) {
@@ -19,24 +19,23 @@ class ConsultationData {
     }
   }
   
-
-  
-  // Obtener un paciente por su cédula
-  static async getUserByCedula(cedula) {
+  // Obtener consultas por su cédula de paciente
+  static async getConsultationByCedula(cedula) {
     const connection = await db.connect();
     try {
       const [rows] = await connection.query(
-        "SELECT  id_cedula, tipo_cedula, id_empresa, nombre, apellidos, conocido_como, telefono,telefono_emergencia,correo, residencia, observaciones FROM tbpaciente WHERE id_cedula = ? AND estado = 1",
+        "SELECT id_consulta, id_cedula, id_empresa, tipoconsulta, valoracion, presion_arterial, frecuencia_cardiaca, saturacion_oxigeno, glicemia, frecuencia_respiratoria, plan_tratamiento, fecha_consulta, monto_consulta FROM tbconsulta WHERE id_cedula=?",
         [cedula]
       );
-      return rows[0] || null; // Devuelve el usuario o null si no existe
+      return rows || null; // Devuelve la consulta o null si no existe
     } catch (error) {
-      console.error("Error al obtener el paciente:", error.message);
+      console.error("Error al obtener consulta:", error.message);
       throw error;
     } finally {
       await db.disconnect();
     }
   }
+
 
   // Crear un nueva consulta
   static async createConsultation(data) {
@@ -46,7 +45,7 @@ class ConsultationData {
       const {
         id_cedula,
         id_empresa,
-        id_tipoconsulta,
+        tipoconsulta,
         valoracion,
         presion_arterial,
         frecuencia_cardiaca,
@@ -59,12 +58,12 @@ class ConsultationData {
       } = data;
 
       const [result] = await connection.query(
-        `INSERT INTO tbconsulta(id_cedula, id_empresa, id_tipoconsulta, valoracion,presion_arterial, frecuencia_cardiaca, saturacion_oxigeno,glicemia,frecuencia_respiratoria,plan_tratamiento,fecha_consulta, monto_consulta,estado)
+        `INSERT INTO tbconsulta(id_cedula, id_empresa, tipoconsulta, valoracion,presion_arterial, frecuencia_cardiaca, saturacion_oxigeno,glicemia,frecuencia_respiratoria,plan_tratamiento,fecha_consulta, monto_consulta,estado)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`,
         [
             id_cedula,
             id_empresa,
-            id_tipoconsulta,
+            tipoconsulta,
             valoracion,
             presion_arterial,
             frecuencia_cardiaca,
@@ -86,67 +85,66 @@ class ConsultationData {
     }
   }
 
-  // Actualizar un usuario
-  static async updateUser(data) {
+  // Actualizar consulta
+  static async updateConsultation(data) {
     const connection = await db.connect();
     try {
       const {
+        id_consulta,
         id_cedula,
-        tipo_cedula,
-        nombre,
-        apellidos,
-        conocido_como,
-        telefono,
-        telefono_emergencia,
-        correo,
-        residencia,
-        observaciones
+        tipoconsulta,
+        valoracion,
+        presion_arterial,
+        frecuencia_cardiaca,
+        saturacion_oxigeno,
+        glicemia,
+        frecuencia_respiratoria,
+        plan_tratamiento,
+        fecha_consulta,
+        monto_consulta,
       } = data;
   
-      // Validación de datos requeridos
-      if (!id_cedula || !tipo_cedula || !nombre || !apellidos) {
-        throw new Error("Faltan datos obligatorios para actualizar el usuario");
-      }
-  
       const [result] = await connection.query(
-        `UPDATE tbpaciente
-         SET tipo_cedula = ?, nombre = ?, apellidos = ?, conocido_como = ?, telefono = ?, telefono_emergencia = ?, correo = ?, residencia = ?, observaciones = ?
-         WHERE id_cedula = ?`,
+        `UPDATE tbconsulta
+         SET tipoconsulta = ?, valoracion = ?, presion_arterial = ?, frecuencia_cardiaca = ?, saturacion_oxigeno = ?, glicemia = ?, frecuencia_respiratoria = ?, plan_tratamiento = ?, fecha_consulta = ?, monto_consulta = ?
+         WHERE id_cedula = ? AND id_consulta = ?`,
         [
-          tipo_cedula,
-          nombre,
-          apellidos,
-          conocido_como,
-          telefono,
-          telefono_emergencia,
-          correo,
-          residencia,
-          observaciones,
-          id_cedula
+          tipoconsulta,
+          valoracion,
+          presion_arterial,
+          frecuencia_cardiaca,
+          saturacion_oxigeno,
+          glicemia,
+          frecuencia_respiratoria,
+          plan_tratamiento,
+          fecha_consulta,
+          monto_consulta,
+          id_cedula, // Debe ir aquí
+          id_consulta, // Debe ir aquí
         ]
       );
   
       return result.affectedRows > 0; // Devuelve true si se actualizó correctamente
     } catch (error) {
-      console.error("Error al actualizar el usuario:", error.message);
+      console.error("Error al actualizar la consulta:", error.message);
       throw error;
     } finally {
       await db.disconnect();
     }
   }
-
-  // Eliminar un paciente
-  static async deleteUser(cedula) {
+  
+  // Eliminar Consulta  / pasar estado a 
+  static async deleteConsultation(id_consulta) {
     const connection = await db.connect();
     try {
       const [result] = await connection.query(
-        //`DELETE FROM tbusuario WHERE id_cedula = ?`,
-        `UPDATE tbpaciente SET estado = ? WHERE id_cedula = ?`,
-        [0, cedula]
+     
+        `UPDATE tbconsulta SET estado = ? WHERE id_consulta = ?`,
+        [0, id_consulta]
       );
       return result.affectedRows > 0; // Devuelve true si se eliminó correctamente
     } catch (error) {
-      console.error("Error al eliminar el paciente:", error.message);
+      console.error("Error al finalizar consulta:", error.message);
       throw error;
     } finally {
       await db.disconnect();

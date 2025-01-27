@@ -1,4 +1,4 @@
-const PatientData = require("../data/patientData");
+//const PatientData = require("../data/patientData");
 const UserData = require("../data/userData");
 
 
@@ -91,8 +91,12 @@ class ControllerUser {
 
   // Actualizar usuario por cédula
   async updateUserByCedula(data) {
+
+    console.log('Datos enviados al servidor:', data);
     try {
+      
       const result = await UserData.updateUser(data); // Método estático
+      
       if (!result) {
         throw new Error(
           `No se encontró un usuario con la cédula ${data.id_cedula}`

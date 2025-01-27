@@ -2,7 +2,7 @@ const DiaryData = require("../data/diaryData");
 
 class ControllerDiary {
 
-  // Crear usuario
+  // Crear o agendar cita
   async createDiary(data) {
     try {
       const result = await DiaryData.createDiary(data); // Método estático
@@ -13,7 +13,7 @@ class ControllerDiary {
     }
   }
 
-  // Obtener todos los usuarios
+  // Obtener todas las citas
   async getAllDiary() {
     try {
       const diarys = await DiaryData.getAllDiary(); // Método estático, devuelve todas citas 
@@ -24,7 +24,7 @@ class ControllerDiary {
     }
   }
 
-  // Obtener un usuario por cedula
+  // Obtener una cita
   async getDiaryByCedula(cedula) {
     try {
       const user = await DiaryData.getDiaryByCedula(cedula); // Método estático

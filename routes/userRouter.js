@@ -10,26 +10,41 @@ const userRouter = (app) => {
   };
   
 //obtener usuario por cedula/ ruta api
-  app.route("/user/:cedula")
-  .get(async (req, res) => {
-    try {
-      const { cedula } = req.params; // Obtiene la cédula de la URL
-      const controller = new ControllerUser();
-      const user = await controller.getUserByCedula(cedula);
+app.route("/auth/login").post(async (req, res) => {
+  let response = { data: null, code: null };
+  try {
+    const { id_cedula, contrasena } = req.body;
 
-      if (user) {
-        response.data = user;
-        response.code = "200";
-      } else {
-        response.data = "Usuario no encontrado";
-        response.code = "404";
-      }
-    } catch (error) {
-      response.data = error.message;
-      response.code = "500";
+    if (!id_cedula || !contrasena) {
+      response.data = "Cédula y contraseña son requeridas";
+      response.code = "400";
+      return res.status(400).send(response);
     }
-    res.send(response);
-  })
+
+    const controller = new ControllerUser();
+    const user = await controller.auth(id_cedula, contrasena);
+
+    if (!user) {
+      response.data = "Credenciales incorrectas";
+      response.code = "401";
+      return res.status(401).send(response);
+    }
+
+    response.data = {
+      message: "Login exitoso",
+      user,
+    };
+    response.code = "200";
+    return res.status(200).send(response);
+  } catch (error) {
+    console.error("Error en /auth/login:", error.stack);
+    response.data = error.message;
+    response.code = "500";
+    return res.status(500).send(response);
+  }
+})
+
+
   //eliminar usuario por cedula/ ruta api
   .delete(async (req, res) => {
     try {
@@ -95,23 +110,37 @@ const userRouter = (app) => {
     })
     
     // Actualizar usuario por cédula
-    .patch(async (req, res) => {
-      try {
-        const controller = new ControllerUser();
-        const result = await controller.updateUserByCedula(req.body);
-        if (result.success) {
-          response.data = result.message;
-          response.code = "200";
-        } else {
-          response.data = "El Usuario No fue actualizado";
-          response.code = "400";
-        }
-      } catch (error) {
-        response.data = error.message;
-        response.code = "500";
-      }
-      res.send(response);
-    });
+    // Actualizar usuario por cédula
+.patch(async (req, res) => {
+  // Inicializa el objeto response
+  const response = {
+    data: null,
+    code: null,
+  };
+
+  try {
+    // Instancia el controlador y llama al método para actualizar el usuario
+    const controller = new ControllerUser();
+    const result = await controller.updateUserByCedula(req.body);
+    
+    // Verifica el resultado del controlador
+    if (result.success) {
+      response.data = result.message || "Usuario actualizado correctamente";
+      response.code = "200";
+    } else {
+      response.data = "El Usuario no fue actualizado";
+      response.code = "400";
+    }
+  } catch (error) {
+    // Captura errores y devuelve una respuesta adecuada
+    response.data = error.message || "Error interno del servidor";
+    response.code = "500";
+  }
+
+  // Envía la respuesta al cliente
+  res.status(response.code).json(response);
+});
+
 
 };
 

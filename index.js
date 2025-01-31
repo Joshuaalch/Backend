@@ -1,10 +1,11 @@
+require('dotenv').config(); // Mueve esto a la primera línea
 const express = require('express');
 const validateBody = require("./middlewares/validateBody");
 const cors = require('cors');
 
 
 
-const PORT = 3000;
+const PORT = 3001;
 
 // Crear una sola instancia de express
 const app = express();
@@ -46,6 +47,13 @@ mhRouter(app);
 const fileRouter = require('./routes/fileRouter');
 fileRouter(app);
 
+const reportRouter = require('./routes/reportRouter');
+reportRouter(app);
+
+const sendEmail = require('./routes/sendEmailRouter');
+sendEmail(app);
+console.log('Email:', process.env.EMAIL_USER);
+console.log('Password:', process.env.EMAIL_PASS);
 
 // Iniciar el servidor
 app.listen(3001, () => {

@@ -24,10 +24,28 @@ class ConsultationData {
     const connection = await db.connect();
     try {
       const [rows] = await connection.query(
-        "SELECT id_consulta, id_cedula, id_empresa, tipoconsulta, valoracion, presion_arterial, frecuencia_cardiaca, saturacion_oxigeno, glicemia, frecuencia_respiratoria, plan_tratamiento, fecha_consulta, monto_consulta FROM tbconsulta WHERE id_cedula=?",
+        `SELECT 
+           c.id_consulta, 
+           c.id_cedula, 
+           c.id_empresa, 
+           c.tipoconsulta, 
+           c.valoracion, 
+           c.presion_arterial, 
+           c.frecuencia_cardiaca, 
+           c.saturacion_oxigeno, 
+           c.glicemia, 
+           c.frecuencia_respiratoria, 
+           c.plan_tratamiento, 
+           c.fecha_consulta, 
+           c.monto_consulta,
+           p.nombre AS nombre_paciente, -- Nombre del paciente
+           p.apellidos AS apellido_paciente -- Apellido del paciente
+         FROM tbconsulta c
+         INNER JOIN tbpaciente p ON c.id_cedula = p.id_cedula -- Relación entre consulta y paciente
+         WHERE c.id_cedula = ?`, // Filtra por cédula
         [cedula]
       );
-      return rows || null; // Devuelve la consulta o null si no existe
+      return rows || null; // Devuelve las consultas o null si no existen
     } catch (error) {
       console.error("Error al obtener consulta:", error.message);
       throw error;
@@ -35,6 +53,7 @@ class ConsultationData {
       await db.disconnect();
     }
   }
+  
 
 
   // Crear un nueva consulta

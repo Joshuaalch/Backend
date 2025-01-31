@@ -152,7 +152,7 @@ class UserData {
       delete user.contrasena;
       //delete user.id_empresa;
       delete user.tipo_cedula;
-      delete user.rol;
+      //delete user.rol;
   
       return user; // Devuelve el usuario autenticado
     } catch (error) {

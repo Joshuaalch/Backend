@@ -8,27 +8,53 @@ const consultationRouter = (app) => {
   };
   
   //obtener consultas  por cedula/ ruta api
-  app.route("/consultation/:cedula")
-  .get(async (req, res) => {
+
+  app.route("/consultation/:cedula").get(async (req, res) => {
     try {
       const { cedula } = req.params; // Obtiene la cédula de la URL
       const controller = new ControllerConsultation();
       const user = await controller.getConsultationByCedula(cedula);
-
-      if (user) {
-        response.data = user;
-        response.code = "200";
+  
+      if (user && user.length > 0) {
+        // Reestructuramos los datos para que nombre y apellidos aparezcan después de id_consulta
+        const orderedData = user.map((consulta) => {
+          const {
+            id_consulta,
+            nombre_paciente,
+            apellido_paciente,
+            fecha_consulta, // Extraemos la fecha
+            ...resto
+          } = consulta;
+        
+          return {
+            id_consulta,
+            nombre_paciente,
+            apellido_paciente,
+            fecha_consulta: fecha_consulta instanceof Date 
+              ? fecha_consulta.toISOString().split('T')[0]  // Convierte a string y formatea
+              : fecha_consulta.split('T')[0], // En caso de que ya sea string
+            ...resto,
+          };
+        });
+  
+        res.status(200).send({
+          data: orderedData,
+          code: "200",
+        });
       } else {
-        response.data = "Consulta usuario no encontrada";
-        response.code = "404";
+        res.status(404).send({
+          data: "Consulta usuario no encontrada",
+          code: "404",
+        });
       }
     } catch (error) {
-      response.data = error.message;
-      response.code = "500";
+      res.status(500).send({
+        data: error.message,
+        code: "500",
+      });
     }
-    res.send(response);
-  })
-
+  });
+  
  //eliminar consulta por cedula
   app.route("/consultation/:id_consulta")
 

@@ -12,6 +12,12 @@ const fileRouter = (app) => {
   { name: 'image3', maxCount: 1 },
   { name: 'pdf', maxCount: 1 },
   ]), (req, res) => fileController.uploadFile(req, res));
+
+  app.get('/api/files/patient/:id_cedula', (req, res) => fileController.getFilesByCedula(req, res));
 };
+  
+
+
+
 
 module.exports = fileRouter;

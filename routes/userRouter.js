@@ -110,7 +110,6 @@ app.route("/auth/login").post(async (req, res) => {
     })
     
     // Actualizar usuario por cédula
-    // Actualizar usuario por cédula
 .patch(async (req, res) => {
   // Inicializa el objeto response
   const response = {

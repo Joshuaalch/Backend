@@ -1,7 +1,11 @@
-const PatientData = require("../data/patientData");
+//const PatientData = require("../data/patientData");
 const UserData = require("../data/userData");
 
+
+
 class ControllerUser {
+
+  
   // Autenticación
   async auth(cedula, contrasena) {
     try {
@@ -58,7 +62,7 @@ class ControllerUser {
   // Obtener un usuario por cedula
   async getUserByCedula(cedula) {
     try {
-      const user = await PatientData.getUserByCedula(cedula); // Método estático
+      const user = await UserData.getUserByCedula(cedula); // Método estático
 
       if (!user) {
         throw new Error(`No se encontró un usuario con la cédula ${cedula}`);
@@ -87,8 +91,12 @@ class ControllerUser {
 
   // Actualizar usuario por cédula
   async updateUserByCedula(data) {
+
+    console.log('Datos enviados al servidor:', data);
     try {
+      
       const result = await UserData.updateUser(data); // Método estático
+      
       if (!result) {
         throw new Error(
           `No se encontró un usuario con la cédula ${data.id_cedula}`
@@ -100,6 +108,7 @@ class ControllerUser {
       throw error;
     }
   }
+
 }
 
 module.exports = ControllerUser;

@@ -7,7 +7,7 @@ const patientRouter = (app) => {
     code: "code",
   };
   
-  //Metodo para obtener paciente por cedula/ ruta api
+  //obtener paciente por cedula/ ruta api
   app.route("/patient/:cedula")
   .get(async (req, res) => {
     try {

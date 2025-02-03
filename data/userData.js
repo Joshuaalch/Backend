@@ -21,7 +21,7 @@ class UserData {
     const connection = await db.connect();
     try {
       const [rows] = await connection.query(
-        "SELECT  id_cedula, tipo_cedula, id_empresa, nombre, apellidos, correo, telefono, rol FROM tbusuario WHERE id_cedula = ? AND estado = 1",
+        "SELECT  id_cedula, nombre, apellidos, correo, telefono FROM tbusuario WHERE id_cedula = ? AND estado = 1",
         [cedula]
       );
       return rows[0] || null; // Devuelve el usuario o null si no existe
@@ -81,13 +81,13 @@ class UserData {
   static async updateUser(data) {
     const connection = await db.connect();
     try {
-      const {id_cedula, tipo_cedula, nombre, apellidos, correo, telefono, rol, estado } =
+      const {id_cedula, nombre, apellidos, correo, telefono, estado } =
         data;
       const [result] = await connection.query(
         `UPDATE tbusuario
-                 SET tipo_cedula = ?, nombre = ?, apellidos = ?, correo = ?, telefono = ?, rol = ?, estado = ?
+                 SET  nombre = ?, apellidos = ?, correo = ?, telefono = ?, estado = ?
                  WHERE id_cedula = ?`,
-        [tipo_cedula, nombre, apellidos, correo, telefono, rol, estado, id_cedula]
+        [ nombre, apellidos, correo, telefono,  estado, id_cedula]
       );
       return result.affectedRows > 0; // Devuelve true si se actualizó correctamente
     } catch (error) {
@@ -118,39 +118,52 @@ class UserData {
 
   // Login de usuario
   static async login(cedula, contrasena) {
-    console.log(cedula)
-    console.log(contrasena)
-    const connection = await db.connect();
+    console.log("Cédula ingresada:", cedula);
+    console.log("Contraseña ingresada:", contrasena);
+  
+  
+    const connection = await db.connect(); // Obtén la conexión activa
     try {
+      // Consulta el usuario por cédula
       const [rows] = await connection.query(
-        "SELECT * FROM tbusuario WHERE id_cedula = ? AND estado = 1",
+        "SELECT * FROM tbusuario WHERE id_cedula = ?",
         [cedula]
       );
-
+  
       const user = rows[0];
-
+      console.log("Resultado de la consulta:", user); // Debug
+  
       if (!user) {
+        console.error("Usuario no encontrado con ID:", cedula);
         return null; // Usuario no encontrado
       }
-
-      // Verificar la contraseña
-      const isMatch = await bcrypt.compare(contrasena, user.contrasena);
+  
+      // Verifica la contraseña usando bcrypt
+      const isMatch = await bcrypt.compare(String(contrasena), String(user.contrasena));
+     // const isMatch = await bcrypt.compare(contrasena, user.contrasena);
+      console.log("Comparación de contraseñas:", isMatch); // Debug: Resultado de la comparación
+  
       if (!isMatch) {
+        console.error("Contraseña incorrecta para el usuario:", cedula);
         return null; // Contraseña incorrecta
       }
-
-      // eliminar estado y contrasena
+  
+      // Elimina campos sensibles antes de devolver el usuario
       delete user.contrasena;
-      delete user.estado;
-
-      return user; // Devuelve el usuario si la contraseña coincide
+      //delete user.id_empresa;
+      delete user.tipo_cedula;
+      delete user.rol;
+  
+      return user; // Devuelve el usuario autenticado
     } catch (error) {
       console.error("Error en el login del usuario:", error.message);
       throw error;
     } finally {
-      await db.disconnect();
+      await db.disconnect(); // Cierra la conexión
     }
   }
+  
+  
 
   // Cambiar contraseña
   static async changePassword(cedula, nuevaContrasena) {

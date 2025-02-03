@@ -2,7 +2,7 @@ const ConsultationData = require("../data/consultationData");
 
 class ControllerConsultation {
 
-  // Metodo para crear las consultas
+  // Crear consluta
   async createConsultation(data) {
     try {
       const result = await ConsultationData.createConsultation(data); // Método estático
@@ -13,57 +13,57 @@ class ControllerConsultation {
     }
   }
 
-  // Metodo para obtener todas las consultas
+  // Obtener todas las consultas
   async getAllConsultation() {
     try {
       const consultation = await ConsultationData.getAllConsultation(); // Método estático, devuelve todos los usuarios (pacientes)
       return consultation;
     } catch (error) {
-      console.error("Error al obtener paciente:", error.message);
+      console.error("Error al obtener pacientes:", error.message);
       throw error;
     }
   }
 
-  // Metodo para obtener una consulta por cedula
+  // Obtener un usuario por cedula
   async getUserByCedula(cedula) {
     try {
-      const consultation = await ConsultationDataData.getUserByCedula(cedula); // Método estático
+      const user = await PatientData.getUserByCedula(cedula); // Método estático
 
-      if (!consultation) {
-        throw new Error(`No se encontró ninguna consulta asociada a la cédula ${cedula}`);
+      if (!user) {
+        throw new Error(`No se encontró paciente con la cédula ${cedula}`);
       }
     
-      return consultation;
+      return user;
     } catch (error) {
-      console.error("Error al obtener consulta:", error.message);
+      console.error("Error al obtener usuarios:", error.message);
       throw error;
     }
   }
 
-  // Metodo para eliminar consulta por cédula
+  // Eliminar usuario por cédula
   async deleteUserByCedula(cedula) {
     try {
-      const result = await ConsultationDataData.deleteUser(cedula); // Método estático
+      const result = await PatientData.deleteUser(cedula); // Método estático
       if (!result) {
-        throw new Error(`No se encontró ninguna consulta asociada a la cédula ${cedula}`);
+        throw new Error(`No se encontró paciente con la cédula ${cedula}`);
       }
-      return { success: true, message: "Consulta eliminada con éxito" };
+      return { success: true, message: "Usuario eliminado con éxito" };
     } catch (error) {
-      console.error("Error al eliminar consulta:", error.message);
+      console.error("Error al eliminar usuario:", error.message);
       throw error;
     }
   }
 
-  // Metodo para actualizar consulta por cédula
+  // Actualizar usuario por cédula
   async updateUserByCedula(data) {
     try {
       const result = await PatientData.updateUser(data); // Método estático
       if (!result) {
-        throw new Error(`No se encontró ninguna consulta asociada a la cédula ${data.id_cedula}`);
+        throw new Error(`No se encontró un usuario con la cédula ${data.id_cedula}`);
       }
-      return { success: true, message: "Consulta actualizada con éxito" };
+      return { success: true, message: "Usuario actualizado con éxito" };
     } catch (error) {
-      console.error("Error al actualizar consulta:", error.message);
+      console.error("Error al actualizar usuario:", error.message);
       throw error;
     }
   }
